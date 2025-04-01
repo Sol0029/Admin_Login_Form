@@ -29,17 +29,16 @@ function toggleSidebar() {
   }
   
   // Toggle password visibility
-  function togglePassword(index) {
-    const passwordInput = document.getElementById(`password-${index}`);
-    const toggleBtn = passwordInput.nextElementSibling;
+  function togglePassword(button) {
+    const passwordInput = button.previousElementSibling;
     if (passwordInput.type === 'password') {
       passwordInput.type = 'text';
-      toggleBtn.textContent = 'Hide';
+      button.textContent = 'Hide';
     } else {
       passwordInput.type = 'password';
-      toggleBtn.textContent = 'Show';
+      button.textContent = 'Show';
     }
-  }
+  }  
   
   // Utility
   function capitalize(str) {
@@ -120,6 +119,7 @@ function toggleSidebar() {
   function showUserList() {
     createUserForm.classList.add('hidden');
     editAdminForm.classList.add('hidden');
+    document.getElementById('archiveSection').classList.add('hidden');
     userList.classList.remove('hidden');
     updateUserList();
   }
@@ -127,12 +127,14 @@ function toggleSidebar() {
   function showAdminEditForm() {
     createUserForm.classList.add('hidden');
     userList.classList.add('hidden');
+    document.getElementById('archiveSection').classList.add('hidden'); 
     editAdminForm.classList.remove('hidden');
     const admin = users.find(u => u.role === 'admin');
     adminUsernameInput.value = admin.username;
     adminPasswordInput.value = admin.password;
     adminUpdatedMsg.classList.add('hidden');
   }
+  
   
   adminEditForm.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -164,7 +166,7 @@ function toggleSidebar() {
             <label><strong>Password:</strong></label>
             <div class="relative">
               <input type='password' class='border p-1 rounded w-full pr-10' value="${user.password}" id="password-${userIndex}" />
-              <button type="button" class="absolute right-2 top-1 text-sm text-blue-600" onclick="togglePassword(${userIndex})">Show</button>
+              <button type="button" class="absolute right-2 top-1 text-sm text-blue-600" onclick="togglePassword(this)">Show</button>
             </div>
           </div>
           <p><strong>Role:</strong> ${capitalize(user.role.replace('_', ' '))}</p>
@@ -201,17 +203,76 @@ function toggleSidebar() {
   }
   
   function deleteUser(docId) {
-  if (confirm('Are you sure you want to delete this user?')) {
-    db.collection("users").doc(docId).delete()
-      .then(() => {
-        alert("User deleted successfully!");
-        updateUserList();
-      })
-      .catch((error) => {
-        alert("Failed to delete user: " + error.message);
+    if (confirm('Are you sure you want to delete this user?')) {
+      const userRef = db.collection("users").doc(docId);
+      userRef.get().then((doc) => {
+        if (doc.exists) {
+          const userData = doc.data();
+          db.collection("archived_users").add(userData).then(() => {
+            userRef.delete().then(() => {
+              alert("User archived successfully!");
+              updateUserList();
+            });
+          });
+        }
       });
+    }
   }
-}
+
+  function showArchive() {
+    createUserForm.classList.add('hidden');
+    userList.classList.add('hidden');
+    editAdminForm.classList.add('hidden');
+    document.getElementById('archiveSection').classList.remove('hidden');
+    loadArchivedUsers();
+  }
+  
+  function loadArchivedUsers() {
+    const container = document.getElementById('archivedListContainer');
+    container.innerHTML = '';
+    db.collection("archived_users").get().then(snapshot => {
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        const div = document.createElement('div');
+        div.className = 'border px-4 py-2 rounded-xl bg-white space-y-2';
+        div.innerHTML = `
+          <p><strong>Username:</strong> ${data.username}</p>
+          <p><strong>Role:</strong> ${capitalize(data.role.replace('_', ' '))}</p>
+          <div class="space-x-2">
+            <button onclick="restoreUser('${doc.id}')" class="bg-green-500 text-white px-4 py-1 rounded hover:bg-green-600">Restore</button>
+            <button onclick="permanentlyDeleteUser('${doc.id}')" class="bg-red-600 text-white px-4 py-1 rounded hover:bg-red-700">Delete Permanently</button>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    });
+  }
+  
+  function restoreUser(docId) {
+    const archiveRef = db.collection("archived_users").doc(docId);
+    archiveRef.get().then(doc => {
+      if (doc.exists) {
+        const userData = doc.data();
+        db.collection("users").add(userData).then(() => {
+          archiveRef.delete().then(() => {
+            alert("User restored successfully!");
+            loadArchivedUsers();
+            updateUserList();
+          });
+        });
+      }
+    });
+  }
+  
+  function permanentlyDeleteUser(docId) {
+    if (confirm("Permanently delete this user? This cannot be undone.")) {
+      db.collection("archived_users").doc(docId).delete().then(() => {
+        alert("User permanently deleted.");
+        loadArchivedUsers();
+      });
+    }
+  }
+  
   
   userForm.addEventListener('submit', (e) => {
     e.preventDefault();
