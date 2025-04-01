@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="style.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Admin & User Dashboard</title>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+
+  <!-- Login Page -->
+  <div id="loginPage" class="w-full max-w-sm p-6 bg-white rounded-xl shadow-md">
+    <h2 class="text-2xl font-bold text-center mb-6">Login</h2>
+    <form id="loginForm" class="space-y-4">
+      <input type="text" id="username" placeholder="Username" class="w-full px-4 py-2 border rounded-xl" required />
+      <input type="password" id="password" placeholder="Password" class="w-full px-4 py-2 border rounded-xl" required />
+      <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700">Login</button>
+    </form>
+  </div>
+
+  <!-- Admin Dashboard Page -->
+  <div id="adminDashboard" class="hidden w-full h-screen flex">
+    <button onclick="toggleSidebar()" id="hamburgerToggle" class="hamburger-btn">
+      <span class="material-icons text-3xl text-[#1e293b]">menu</span>
+    </button>
+    <aside id="adminSidebar" class="sidebar">
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center space-x-2">
+          <img src="agila.jpg" alt="Agila Logo" class="w-8 h-8" />
+          <h2 class="text-2xl font-bold whitespace-nowrap" id="sidebarTitle">Agila</h2>
+        </div>
+      </div>
+
+      <div class="relative mb-4">
+        <input type="text" placeholder="Quick Search ..." id="sidebarSearch" oninput="filterSidebar()" class="search-bar" />
+      </div>
+
+      <nav id="sidebarNav" class="space-y-2">
+        <button data-label="dashboard" onclick="setActiveSidebar(this); showDashboardSection()" class="nav-btn">
+          <span class="material-icons mr-2">dashboard</span>
+          <span class="sidebar-label" data-label="Dashboard">Dashboard</span>
+        </button>
+        <button data-label="create user" onclick="setActiveSidebar(this); showCreateUserForm()" class="nav-btn">
+          <span class="material-icons mr-2">person_add</span>
+          <span class="sidebar-label" data-label="Create User">Create User</span>
+        </button>
+        <button data-label="user list" onclick="setActiveSidebar(this); showUserList()" class="nav-btn">
+          <span class="material-icons mr-2">group</span>
+          <span class="sidebar-label" data-label="User List">User List</span>
+        </button>
+        <button data-label="edit admin" onclick="setActiveSidebar(this); showAdminEditForm()" class="nav-btn">
+          <span class="material-icons mr-2">edit</span>
+          <span class="sidebar-label" data-label="Edit Admin">Edit Admin</span>
+        </button>
+        <button data-label="logout" onclick="setActiveSidebar(this); logout()" class="nav-btn">
+          <span class="material-icons mr-2">logout</span>
+          <span class="sidebar-label" data-label="Logout">Logout</span>
+        </button>
+      </nav>
+    </aside>
+
+    <main class="flex-1 p-8 overflow-auto">
+      <div id="createUserForm" class="hidden max-w-3xl mt-8">
+        <h3 class="text-2xl font-semibold mb-4">Create User Account</h3>
+        <form id="userForm" class="space-y-4">
+          <input type="text" id="newUsername" placeholder="New Username" class="w-full px-4 py-2 border rounded-xl" required />
+          <input type="password" id="newPassword" placeholder="New Password" class="w-full px-4 py-2 border rounded-xl" required />
+          <select id="newRole" class="w-full px-4 py-2 border rounded-xl" required>
+            <option value="academic_head">Academic Head</option>
+            <option value="program_head">Program Head</option>
+            <option value="teacher">Teacher</option>
+            <option value="student">Student</option>
+          </select>
+          <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded-xl hover:bg-green-700">Create User</button>
+        </form>
+        <p id="userCreatedMsg" class="text-green-600 mt-4 hidden">User created successfully!</p>
+      </div>
+
+      <div id="userList" class="hidden max-w-3xl mt-8">
+        <h3 class="text-2xl font-semibold mb-4">User Accounts</h3>
+        <p id="totalCount" class="mb-2 font-medium"></p>
+        <div id="roleCounts" class="mb-4 text-sm space-y-1 text-gray-700"></div>
+        <ul id="userListContainer" class="space-y-4"></ul>
+      </div>
+
+      <div id="editAdminForm" class="hidden max-w-md mt-8">
+        <h3 class="text-2xl font-semibold mb-4">Edit Admin Account</h3>
+        <form id="adminEditForm" class="space-y-4">
+          <input type="text" id="adminUsername" placeholder="Admin Username" class="w-full px-4 py-2 border rounded-xl" required />
+          <input type="password" id="adminPassword" placeholder="Admin Password" class="w-full px-4 py-2 border rounded-xl" required />
+          <button type="submit" class="bg-yellow-600 text-white px-6 py-2 rounded-xl hover:bg-yellow-700">Save Changes</button>
+        </form>
+        <p id="adminUpdatedMsg" class="text-green-600 mt-4 hidden">Admin updated successfully!</p>
+      </div>
+    </main>
+  </div>
+
+  <!-- User Dashboard Page -->
+  <div id="userDashboard" class="hidden w-full h-screen flex">
+    <aside class="w-64 bg-white shadow-lg p-4">
+      <h2 id="dashboardRoleTitle" class="text-xl font-bold mb-4">User Dashboard</h2>
+      <nav class="space-y-2">
+        <button class="w-full text-left text-gray-700 hover:text-blue-600" onclick="logout()">Logout</button>
+      </nav>
+    </aside>
+    <main class="flex-1 p-8">
+      <h3 class="text-2xl font-semibold">Welcome, <span id="loggedInUser"></span>!</h3>
+    </main>
+  </div>
+
+  <!-- Firebase App (core SDK) -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+
+<!-- Firebase Authentication -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+
+<!-- Firebase Firestore -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
+<!-- Firebase Configuration -->
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDunUPyhoXUO0D4bvc8p2GNTyBbhLI_Cko",
+    authDomain: "login-form-a8c9a.firebaseapp.com",
+    projectId: "login-form-a8c9a",
+    storageBucket: "login-form-a8c9a.firebasestorage.app",
+    messagingSenderId: "350983039673",
+    appId: "1:350983039673:web:87e9746dac89e394ea8968"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+</script>
+
+<!-- Your custom logic (after Firebase is initialized) -->
+<script src="script.js"></script>
+
+</body>
+</html>
