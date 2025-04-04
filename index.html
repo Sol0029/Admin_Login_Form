@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="style.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.tailwindcss.com"></script> 
   <title>Admin Dashboard</title>
 </head>
 <body class="bg-gray-100 min-h-screen flex items-center justify-center">
 
   <!-- Login Page -->
-  <div id="loginPage" class="w-full max-w-sm p-6 bg-white rounded-xl shadow-md">
+  <div id="loginPage" class="hidden w-full max-w-sm p-6 bg-white rounded-xl shadow-md">
     <h2 class="text-2xl font-bold text-center mb-6">Login</h2>
     <form id="loginForm" class="space-y-4">
       <input type="text" id="username" placeholder="Username" class="w-full px-4 py-2 border rounded-xl" required />
@@ -28,8 +28,10 @@
     <aside id="adminSidebar" class="sidebar">
       <div class="flex items-center justify-between mb-6">
         <div class="flex items-center space-x-2">
-          <img src="agila.jpg" alt="Agila Logo" class="w-8 h-8" />
-          <h2 class="text-2xl font-bold whitespace-nowrap" id="sidebarTitle">Agila</h2>
+          <img src="img/agila.jpg" alt="Agila Logo" class="w-8 h-8" />
+          <button id="sidebarTitle" onclick="handleAgilaClick()" class="text-2xl font-bold whitespace-nowrap text-white focus:outline-none focus:ring-0 hover:text-white active:text-white">
+            Agila
+          </button>
         </div>
       </div>
 
@@ -70,7 +72,29 @@
         <h3 class="text-2xl font-semibold mb-4">Create User Account</h3>
         <form id="userForm" class="space-y-4">
           <input type="text" id="newUsername" placeholder="New Username" class="w-full px-4 py-2 border rounded-xl" required />
-          <input type="password" id="newPassword" placeholder="New Password" class="w-full px-4 py-2 border rounded-xl" required />
+          <input type="password" id="newPassword" placeholder="New Password" class="w-full px-4 py-2 border rounded-xl" required />    
+          <!-- Department Dropdown -->
+          <div id="departmentField" class="hidden">
+            <select id="departmentSelect" class="w-full px-4 py-2 border rounded-xl mt-2">
+              <option value="">Select Department</option>
+              <option value="IT">IT</option>
+              <option value="CPE">CPE</option>
+              <option value="Tourism">Tourism</option>
+              <option value="Accounting">Accounting</option>
+            </select>
+          </div>
+          <!-- Section and Year Level for Student -->
+          <div id="studentFields" class="hidden">
+            <input type="text" id="studentSection" placeholder="Section" class="w-full px-4 py-2 border rounded-xl mt-2" />
+            <select id="yearLevelSelect" class="w-full px-4 py-2 border rounded-xl mt-2">
+              <option value="">Select Year Level</option>
+              <option value="1st Year">1st Year</option>
+              <option value="2nd Year">2nd Year</option>
+              <option value="3rd Year">3rd Year</option>
+              <option value="4th Year">4th Year</option>
+            </select>
+          </div>
+          <!-- Role dropdown -->
           <select id="newRole" class="w-full px-4 py-2 border rounded-xl" required>
             <option value="academic_head">Academic Head</option>
             <option value="program_head">Program Head</option>
@@ -84,6 +108,21 @@
 
       <div id="userList" class="hidden max-w-3xl mt-8">
         <h3 class="text-2xl font-semibold mb-4">User Accounts</h3>
+        <select id="filterDepartment" class="border rounded px-2 py-1">
+          <option value="">All Departments</option>
+          <option value="IT">IT</option>
+          <option value="CPE">CPE</option>
+          <option value="Tourism">Tourism</option>
+          <option value="Accounting">Accounting</option>
+        </select>
+        <select id="filterYearLevel" class="border rounded px-2 py-1">
+          <option value="">All Years</option>
+          <option value="1st year">1st year</option>
+          <option value="2nd year">2nd year</option>
+          <option value="3rd year">3rd year</option>
+          <option value="4th year">4th year</option>
+        </select>        
+        <input id="searchUser" type="text" placeholder="Search..." class="border rounded px-2 py-1" />
         <p id="totalCount" class="mb-2 font-medium"></p>
         <div id="roleCounts" class="mb-4 text-sm space-y-1 text-gray-700"></div>
         <ul id="userListContainer" class="space-y-4"></ul>
@@ -128,21 +167,11 @@
 <!-- Firebase Firestore -->
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
-<!-- Firebase Configuration -->
-<script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyDunUPyhoXUO0D4bvc8p2GNTyBbhLI_Cko",
-    authDomain: "login-form-a8c9a.firebaseapp.com",
-    projectId: "login-form-a8c9a",
-    storageBucket: "login-form-a8c9a.firebasestorage.app",
-    messagingSenderId: "350983039673",
-    appId: "1:350983039673:web:87e9746dac89e394ea8968"
-  };
-
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-</script>
-
+<!-- Firebase Configuration src-->
+<script src="Config/firebase.js"></script>
+<!-- store.js src-->
+<script src="store.js"></script>
+<!-- script.js src-->
 <script src="script.js"></script>
 
 </body>
