@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="../css/style.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>AGILA - Admin Dashboard</title>
+</head>
+
+<body class="bg-gray-100">
+    <div id="adminDashboard" class="w-full h-screen flex">
+        <button onclick="toggleSidebar()" id="hamburgerToggle" class="hamburger-btn">
+            <span class="material-icons text-3xl text-[#1e293b]">menu</span>
+        </button>
+        <aside id="adminSidebar" class="sidebar">
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center space-x-2">
+                    <img src="../images/agila.jpg" alt="Agila Logo" class="w-8 h-8" />
+                    <button id="sidebarTitle" onclick="handleAgilaClick()"
+                        class="text-2xl font-bold whitespace-nowrap text-white">
+                        Agila
+                    </button>
+                </div>
+            </div>
+
+            <div class="relative mb-4">
+                <input type="text" placeholder="Quick Search ..." id="sidebarSearch" oninput="filterSidebar()"
+                    class="search-bar" />
+            </div>
+
+            <nav id="sidebarNav" class="space-y-2">
+                <button data-label="dashboard" onclick="setActiveSidebar(this); showDashboardSection()" class="nav-btn">
+                    <span class="material-icons mr-2">dashboard</span>
+                    <span class="sidebar-label" data-label="Dashboard">Dashboard</span>
+                </button>
+                <button data-label="create user" onclick="setActiveSidebar(this); showCreateUserForm()" class="nav-btn">
+                    <span class="material-icons mr-2">person_add</span>
+                    <span class="sidebar-label" data-label="Create User">Create User</span>
+                </button>
+                <button data-label="user list" onclick="setActiveSidebar(this); showUserList()" class="nav-btn">
+                    <span class="material-icons mr-2">group</span>
+                    <span class="sidebar-label" data-label="User List">User List</span>
+                </button>
+                <button data-label="archive" onclick="setActiveSidebar(this); showArchive()" class="nav-btn">
+                    <span class="material-icons mr-2">archive</span>
+                    <span class="sidebar-label" data-label="Archive">Archive</span>
+                </button>
+                <button data-label="edit admin" onclick="setActiveSidebar(this); showAdminEditForm()" class="nav-btn">
+                    <span class="material-icons mr-2">edit</span>
+                    <span class="sidebar-label" data-label="Edit Admin">Edit Admin</span>
+                </button>
+                <button data-label="logout" onclick="setActiveSidebar(this); logout()" class="nav-btn">
+                    <span class="material-icons mr-2">logout</span>
+                    <span class="sidebar-label" data-label="Logout">Logout</span>
+                </button>
+            </nav>
+        </aside>
+
+        <main class="flex-1 p-8 overflow-auto">
+            <!-- Admin dashboard sections (Create User Form, User List, etc.) can be included here -->
+            <section id="dashboardSection">
+                <!-- Content for the main dashboard -->
+            </section>
+        </main>
+    </div>
+
+    <!-- Firebase and JS scripts -->
+    <script src="config/firebaseauth.js"></script>
+    <script src="js/store.js"></script>
+    <script src="js/script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="../css/style.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>AGILA - Login</title>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <!-- Login Page -->
+    <div id="loginPage" class="w-full max-w-sm p-6 bg-white rounded-xl shadow-md">
+        <h2 class="text-2xl font-bold text-center mb-6">Login</h2>
+        <form id="loginForm" class="space-y-4">
+            <input type="text" id="username" placeholder="Username" class="w-full px-4 py-2 border rounded-xl"
+                required />
+            <input type="password" id="password" placeholder="Password" class="w-full px-4 py-2 border rounded-xl"
+                required />
+            <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700">Login</button>
+        </form>
+    </div>
+
+    <!-- Firebase App (core SDK) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+
+    <!-- Firebase Authentication -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+
+    <!-- Firebase Firestore -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
+    <!-- Firebase and JS scripts -->
+    <script src="../config/firebaseauth.js"></script>
+    <!-- store.js src-->
+    <script src="../js/store.js"></script>
+    <!-- script.js src-->
+    <script src="../js/script.js"></script>
+</body>
+
+</html>
