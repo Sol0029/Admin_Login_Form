@@ -94,3 +94,27 @@
     outline: none;
   }
   
+  /* When the sidebar is collapsed, hide only the search input */
+.sidebar.collapsed #sidebarSearchContainer input {
+  display: none;
+}
+
+/* Hide the search input and the clear (X) button when the sidebar is collapsed */
+.sidebar.collapsed #sidebarSearchContainer input,
+.sidebar.collapsed #sidebarSearchContainer #clearSearch {
+  display: none;
+}
+#clearSearch {
+  padding: 4px;
+  border-radius: 50%;
+  transition: background-color 0.2s, transform 0.1s;
+}
+#clearSearch:hover,
+#clearSearch:focus {
+  background-color: rgba(0, 0, 0, 0.1);
+  outline: none;
+}
+#clearSearch:active {
+  background-color: rgba(0, 0, 0, 0.2);
+  transform: scale(0.95);
+}

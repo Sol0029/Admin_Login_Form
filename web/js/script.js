@@ -5,9 +5,8 @@ function toggleSidebar() {
   const sidebar = document.getElementById("adminSidebar");
   const hamburger = document.getElementById("hamburgerToggle");
   sidebar.classList.toggle("collapsed");
-  hamburger.style.left = sidebar.classList.contains("collapsed")
-    ? "5rem"
-    : "17rem";
+
+  hamburger.style.left = sidebar.classList.contains("collapsed") ? "5rem" : "17rem";
 }
 
 // Sidebar Active Highlight
@@ -31,6 +30,13 @@ function filterSidebar() {
     const label = button.getAttribute("data-label").toLowerCase();
     button.style.display = label.includes(input) ? "flex" : "none";
   });
+}
+
+// Function to clear the search input and reset the sidebar items
+function clearSearch() {
+  const searchInput = document.getElementById("sidebarSearch");
+  searchInput.value = "";
+  filterSidebar(); // Update the filtered sidebar items
 }
 
 function togglePassword(button) {
@@ -459,7 +465,7 @@ window.addEventListener("DOMContentLoaded", () => {
       if (user.email === "admin@agila.com") {
         adminDashboard.style.display = "flex";
         loginPage.style.display = "none";
-        document.title = "Admin";
+        document.title = "AGILA - Admin Dashboard";
       } else {
         // Try localStorage first
         const savedUser = localStorage.getItem("agilaUser");
@@ -495,7 +501,7 @@ window.addEventListener("DOMContentLoaded", () => {
       }
     } else {
       loginPage.style.display = "block";
-      document.title = "Login";
+      document.title = "AGILA - Login";
     }
   });
 
